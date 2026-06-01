@@ -5,11 +5,11 @@
 
  Create a new application with the OAuth Redirect URI set to http://localhost
 
- Copy the client_id and paste in two places below that read paste_your_client_id_here
+ Copy the client_id and paste in two places below that read YOUR_CLIENT_ID and paste_client_id_here
 
  visit:
 
- https://id.twitch.tv/oauth2/authorize?client_id=paste_your_client_id_here&redirect_uri=http://localhost&response_type=token&scope=moderator:read:followers+channel:read:subscriptions+bits:read
+ https://id.twitch.tv/oauth2/authorize?client_id=YOUR_CLIENT_ID&redirect_uri=http://localhost&response_type=token&scope=moderator:read:followers+channel:read:subscriptions+bits:read
 
  Authorize the app (it only works locally on your PC). This may need to be redone every 2 months due to limitations of the Twitch API, but I haven't been able to confirm that yet.
 
@@ -19,6 +19,6 @@
  */
 
 const CONFIG = {
-    CLIENT_ID: "paste_your_client_id_here",
+    CLIENT_ID: "paste_client_id_here",
     ACCESS_TOKEN: "paste_access_token_here"
 };
