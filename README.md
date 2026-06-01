@@ -38,7 +38,8 @@ To pull data directly from Twitch, you need to generate a Client ID and a User A
 const CONFIG = {
     CLIENT_ID: "paste_client_id_here",
     ACCESS_TOKEN: "paste_access_token_here"
-};``
+};
+```
 
 4. Save the file.
 
