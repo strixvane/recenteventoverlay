@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Recent Event Overlay - Settings</title>
+    <link rel="stylesheet" href="settings-style.css" type="text/css">
+</head>
+<body>
+    <div class="container">
+        <h2>Overlay Settings</h2>
+        <fieldset>
+            <legend>Typography</legend>
+            <div class="form-group">
+                <label for="fontFamily">Font Family</label>
+                <input type="text" id="fontFamily" value="'Segoe UI', Tahoma, Geneva, Verdana, sans-serif" placeholder="e.g. Arial, 'Times New Roman'">
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="fontSize">Size (px)</label>
+                    <input type="number" id="fontSize" value="24" min="6" max="144">
+                </div>
+                <div class="form-group">
+                    <label for="fontWeight">Weight</label>
+                    <select id="fontWeight">
+                        <option value="400">Normal (400)</option>
+                        <option value="600">Semi-Bold (600)</option>
+                        <option value="800" selected>Bold (800)</option>
+                        <option value="900">Black (900)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="fontStyle">Style</label>
+                    <select id="fontStyle">
+                        <option value="normal">Normal</option>
+                        <option value="italic">Italic</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="textDecoration">Decoration</label>
+                    <select id="textDecoration">
+                        <option value="none">None</option>
+                        <option value="underline">Underline</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="kerning">Kerning / Letter Spacing (px)</label>
+                <input type="number" id="kerning" value="0" min="-5" max="20" step="0.5">
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend>Colors & Effects</legend>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="textColor">Text Color</label>
+                    <input type="color" id="textColor" value="#ffffff">
+                </div>
+                <div class="form-group">
+                    <label for="labelColor">Label Color</label>
+                    <input type="color" id="labelColor" value="#ff9900">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="shadowColor">Drop Shadow Color</label>
+                <input type="color" id="shadowColor" value="#000000">
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="shadowX">Shadow X</label>
+                    <input type="number" id="shadowX" value="2">
+                </div>
+                <div class="form-group">
+                    <label for="shadowY">Shadow Y</label>
+                    <input type="number" id="shadowY" value="2">
+                </div>
+                <div class="form-group">
+                    <label for="shadowBlur">Blur</label>
+                    <input type="number" id="shadowBlur" value="4">
+                </div>
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend>Layout</legend>
+            <div class="form-group">
+                <label for="layout">Direction</label>
+                <select id="layout">
+                    <option value="vertical">Vertical (Stacked)</option>
+                    <option value="horizontal">Horizontal (Side-by-side)</option>
+                </select>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="spacing">Item Gap (px)</label>
+                    <input type="number" id="spacing" value="12" min="0" max="100">
+                </div>
+                <div class="form-group">
+                    <label for="padding">Padding (px)</label>
+                    <input type="number" id="padding" value="0" min="0" max="50">
+                </div>
+            </div>
+        </fieldset>
+
+        <button onclick="generateSettings()">Save Settings</button>
+    </div>
+    <div class="preview-container">
+        <h3 style="margin-top: 0; color: #FFF; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; text-shadow: 1px 1px 6px #fff;">Live Preview</h3>
+        <div id="preview-box">
+            <div class="event-container">
+                <span class="label">Latest Follower:</span> <span class="value">OwlishGeorge</span>
+            </div>
+            <div class="event-container">
+                <span class="label">Latest Sub:</span> <span class="value">OwlishGeorge</span>
+            </div>
+            <div class="event-container">
+                <span class="label">Latest Cheer:</span> <span class="value">OwlishGeorge (1000 bits)</span>
+            </div>
+        </div>
+    </div>
+    <script>
+        function getSettings() {
+            return {
+                fontFamily: document.getElementById('fontFamily').value,
+                fontSize: document.getElementById('fontSize').value,
+                fontWeight: document.getElementById('fontWeight').value,
+                fontStyle: document.getElementById('fontStyle').value,
+                textDecoration: document.getElementById('textDecoration').value,
+                kerning: document.getElementById('kerning').value,
+                textColor: document.getElementById('textColor').value,
+                labelColor: document.getElementById('labelColor').value,
+                shadowColor: document.getElementById('shadowColor').value,
+                shadowX: document.getElementById('shadowX').value,
+                shadowY: document.getElementById('shadowY').value,
+                shadowBlur: document.getElementById('shadowBlur').value,
+                layout: document.getElementById('layout').value,
+                spacing: document.getElementById('spacing').value,
+                padding: document.getElementById('padding').value
+            };
+        }
+
+        function updatePreview() {
+            const settings = getSettings();
+            const previewBox = document.getElementById('preview-box');
+
+            previewBox.style.fontFamily = settings.fontFamily;
+            previewBox.style.fontSize = settings.fontSize + 'px';
+            previewBox.style.fontWeight = settings.fontWeight;
+            previewBox.style.fontStyle = settings.fontStyle;
+            previewBox.style.textDecoration = settings.textDecoration;
+            previewBox.style.letterSpacing = settings.kerning + 'px';
+
+            previewBox.style.color = settings.textColor;
+            previewBox.style.textShadow = `${settings.shadowX}px ${settings.shadowY}px ${settings.shadowBlur}px ${settings.shadowColor}`;
+            
+            const labels = previewBox.querySelectorAll('.label');
+            labels.forEach(label => label.style.color = settings.labelColor);
+
+            const containers = previewBox.querySelectorAll('.event-container');
+            if (settings.layout === 'horizontal') {
+                previewBox.style.display = 'flex';
+                previewBox.style.flexDirection = 'row';
+                previewBox.style.gap = settings.spacing + 'px';
+                containers.forEach(c => {
+                    c.style.margin = '0';
+                    c.style.padding = settings.padding + 'px';
+                });
+            } else {
+                previewBox.style.display = 'block';
+                previewBox.style.gap = '0';
+                containers.forEach(c => {
+                    c.style.margin = settings.spacing + 'px 0';
+                    c.style.padding = settings.padding + 'px';
+                });
+            }
+        }
+
+        document.querySelectorAll('input, select').forEach(element => {
+            element.addEventListener('input', updatePreview);
+        });
+
+        window.addEventListener('DOMContentLoaded', updatePreview);
+
+        function generateSettings() {
+            const fileContent = `const CUSTOM_SETTINGS = ${JSON.stringify(getSettings(), null, 4)};`;
+            const blob = new Blob([fileContent], { type: 'text/javascript' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'settings.js';
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(() => {
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }, 0);
+        }
+    </script>
+</body>
+</html>
