@@ -4,32 +4,46 @@
     <meta charset="UTF-8">
     <title>Recent Events</title>
     <link rel="stylesheet" href="style.css" type="text/css">
-    <script src="settings.js"></script>
+
     <script>
-        if (typeof CUSTOM_SETTINGS !== 'undefined') {
-            const root = document.documentElement;
-            root.style.setProperty('--font-family', CUSTOM_SETTINGS.fontFamily);
-            root.style.setProperty('--font-size', CUSTOM_SETTINGS.fontSize + 'px');
-            root.style.setProperty('--font-weight', CUSTOM_SETTINGS.fontWeight);
-            root.style.setProperty('--font-style', CUSTOM_SETTINGS.fontStyle);
-            root.style.setProperty('--text-decoration', CUSTOM_SETTINGS.textDecoration);
-            root.style.setProperty('--kerning', CUSTOM_SETTINGS.kerning + 'px');
+        // Extract and decode settings directly from the URL parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const encodedConfig = urlParams.get('cfg');
 
-            root.style.setProperty('--text-color', CUSTOM_SETTINGS.textColor);
-            root.style.setProperty('--label-color', CUSTOM_SETTINGS.labelColor);
-            root.style.setProperty('--text-shadow', `${CUSTOM_SETTINGS.shadowX}px ${CUSTOM_SETTINGS.shadowY}px ${CUSTOM_SETTINGS.shadowBlur}px ${CUSTOM_SETTINGS.shadowColor}`);
+        if (encodedConfig) {
+            try {
+                const jsonString = decodeURIComponent(atob(encodedConfig));
+                const CUSTOM_SETTINGS = JSON.parse(jsonString);
 
-            root.style.setProperty('--padding', CUSTOM_SETTINGS.padding + 'px');
+                const root = document.documentElement;
+                root.style.setProperty('--font-family', CUSTOM_SETTINGS.fontFamily);
+                root.style.setProperty('--font-size', CUSTOM_SETTINGS.fontSize + 'px');
+                root.style.setProperty('--font-weight', CUSTOM_SETTINGS.fontWeight);
+                root.style.setProperty('--font-style', CUSTOM_SETTINGS.fontStyle);
+                root.style.setProperty('--text-decoration', CUSTOM_SETTINGS.textDecoration);
+                root.style.setProperty('--kerning', CUSTOM_SETTINGS.kerning + 'px');
 
-            if (CUSTOM_SETTINGS.layout === 'horizontal') {
-                root.style.setProperty('--layout-display', 'flex');
-                root.style.setProperty('--layout-gap', CUSTOM_SETTINGS.spacing + 'px');
-                document.write('<style>.event-container { margin: 0; }</style>');
-            } else {
-                root.style.setProperty('--spacing', CUSTOM_SETTINGS.spacing + 'px');
+                root.style.setProperty('--text-color', CUSTOM_SETTINGS.textColor);
+                root.style.setProperty('--label-color', CUSTOM_SETTINGS.labelColor);
+                root.style.setProperty('--text-shadow', `${CUSTOM_SETTINGS.shadowX}px ${CUSTOM_SETTINGS.shadowY}px ${CUSTOM_SETTINGS.shadowBlur}px ${CUSTOM_SETTINGS.shadowColor}`);
+
+                root.style.setProperty('--padding', CUSTOM_SETTINGS.padding + 'px');
+
+                if (CUSTOM_SETTINGS.layout === 'horizontal') {
+                    root.style.setProperty('--layout-display', 'flex');
+                    root.style.setProperty('--layout-gap', CUSTOM_SETTINGS.spacing + 'px');
+                    document.write('<style>.event-container { margin: 0; }</style>');
+                } else {
+                    root.style.setProperty('--spacing', CUSTOM_SETTINGS.spacing + 'px');
+                }
+            } catch (e) {
+                console.error("Failed to parse overlay settings from URL:", e);
             }
+        } else {
+            console.warn("No configuration found in URL. Using default CSS styles.");
         }
     </script>
+
     <script src="config.js"></script>
     <script src="app.js"></script>
 </head>
