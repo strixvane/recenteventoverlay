@@ -2,6 +2,8 @@
 
 A lightweight, purely client-side OBS Browser Source overlay that displays your most recent follower, subscriber, and cheer. This solution runs entirely within OBS without relying on external web servers, background applications, or third-party overlay services.
 
+<img width="1133" height="978" alt="Screenshot_20260604_055000" src="https://github.com/user-attachments/assets/0b7e9775-7cea-49da-a5b8-17163a3bc0fb" />
+
 ## Features
 
 * **Self-Contained:** Runs natively as a local file within OBS.
