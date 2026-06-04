@@ -10,15 +10,17 @@
         <h2>Overlay Settings</h2>
         <fieldset>
             <legend>Typography</legend>
-            <div class="form-group">
-                <label for="fontFamily">Font Family</label>
-                <input type="text" id="fontFamily" value="'Segoe UI', Tahoma, Geneva, Verdana, sans-serif" placeholder="e.g. Arial, 'Times New Roman'">
-            </div>
             <div class="form-row">
+                <div class="form-group" style="flex: 2;">
+                    <label for="fontFamily">Font Family</label>
+                    <input type="text" id="fontFamily" value="'Segoe UI', Tahoma, Geneva, Verdana, sans-serif" placeholder="e.g. Arial, 'Times New Roman'">
+                </div>
                 <div class="form-group">
                     <label for="fontSize">Size (px)</label>
                     <input type="number" id="fontSize" value="24" min="6" max="144">
                 </div>
+            </div>
+            <div class="form-row">
                 <div class="form-group">
                     <label for="fontWeight">Weight</label>
                     <select id="fontWeight">
@@ -28,8 +30,6 @@
                         <option value="900">Black (900)</option>
                     </select>
                 </div>
-            </div>
-            <div class="form-row">
                 <div class="form-group">
                     <label for="fontStyle">Style</label>
                     <select id="fontStyle">
@@ -37,6 +37,8 @@
                         <option value="italic">Italic</option>
                     </select>
                 </div>
+            </div>
+            <div class="form-row">
                 <div class="form-group">
                     <label for="textDecoration">Decoration</label>
                     <select id="textDecoration">
@@ -44,10 +46,10 @@
                         <option value="underline">Underline</option>
                     </select>
                 </div>
-            </div>
-            <div class="form-group">
-                <label for="kerning">Kerning / Letter Spacing (px)</label>
-                <input type="number" id="kerning" value="0" min="-5" max="20" step="0.5">
+                <div class="form-group">
+                    <label for="kerning">Kerning / Letter Spacing (px)</label>
+                    <input type="number" id="kerning" value="0" min="-5" max="20" step="0.5">
+                </div>
             </div>
         </fieldset>
         <fieldset>
@@ -83,14 +85,14 @@
         </fieldset>
         <fieldset>
             <legend>Layout</legend>
-            <div class="form-group">
-                <label for="layout">Direction</label>
-                <select id="layout">
-                    <option value="vertical">Vertical (Stacked)</option>
-                    <option value="horizontal">Horizontal (Side-by-side)</option>
-                </select>
-            </div>
             <div class="form-row">
+                <div class="form-group">
+                    <label for="layout">Direction</label>
+                    <select id="layout">
+                        <option value="vertical">Vertical (Stacked)</option>
+                        <option value="horizontal">Horizontal (Side-by-side)</option>
+                    </select>
+                </div>
                 <div class="form-group">
                     <label for="spacing">Item Gap (px)</label>
                     <input type="number" id="spacing" value="12" min="0" max="100">
@@ -102,7 +104,11 @@
             </div>
         </fieldset>
 
-        <button onclick="generateSettings()">Save Settings</button>
+        <button onclick="generateOBSUrl()">Copy OBS URL</button>
+        <div class="form-group" style="margin-top: 15px;">
+            <label for="obsUrlOutput">Your Custom OBS URL</label>
+            <input type="text" id="obsUrlOutput" readonly style="background-color: #000; color: #ff9900; border-color: #ff9900; text-align: center;" placeholder="URL will appear here...">
+        </div>
     </div>
     <div class="preview-container">
         <h3 style="margin-top: 0; color: #FFF; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; text-shadow: 1px 1px 6px #fff;">Live Preview</h3>
@@ -152,7 +158,7 @@
 
             previewBox.style.color = settings.textColor;
             previewBox.style.textShadow = `${settings.shadowX}px ${settings.shadowY}px ${settings.shadowBlur}px ${settings.shadowColor}`;
-            
+
             const labels = previewBox.querySelectorAll('.label');
             labels.forEach(label => label.style.color = settings.labelColor);
 
@@ -181,19 +187,36 @@
 
         window.addEventListener('DOMContentLoaded', updatePreview);
 
-        function generateSettings() {
-            const fileContent = `const CUSTOM_SETTINGS = ${JSON.stringify(getSettings(), null, 4)};`;
-            const blob = new Blob([fileContent], { type: 'text/javascript' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'settings.js';
-            document.body.appendChild(a);
-            a.click();
-            setTimeout(() => {
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-            }, 0);
+        function generateOBSUrl() {
+            const settings = getSettings();
+            const jsonString = JSON.stringify(settings);
+            const encodedSettings = btoa(encodeURIComponent(jsonString));
+
+            // Targets overlay.html instead of index.html based on your repo structure
+            const currentPath = window.location.href;
+            const targetPath = currentPath.replace(/settings(?:-recentevents)?\.html/i, 'overlay.html');
+            const finalUrl = `${targetPath}?cfg=${encodedSettings}`;
+
+            const outputNode = document.getElementById('obsUrlOutput');
+            outputNode.value = finalUrl;
+            outputNode.select();
+
+            try {
+                navigator.clipboard.writeText(finalUrl);
+                const btn = document.querySelector('button');
+                const originalText = btn.innerText;
+                btn.innerText = "Copied to Clipboard!";
+                btn.style.backgroundColor = "#00FF00";
+                btn.style.color = "#000";
+
+                setTimeout(() => {
+                    btn.innerText = originalText;
+                    btn.style.backgroundColor = "#ff9900";
+                    btn.style.color = "#FFF";
+                }, 2000);
+            } catch (err) {
+                console.error('Failed to copy to clipboard', err);
+            }
         }
     </script>
 </body>
